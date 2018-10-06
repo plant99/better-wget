@@ -1,5 +1,5 @@
 # better-wget
-Script written to make wget more efficient
+Script written to make wget more efficient, which restarts `wget` when download speed is below a certain limit.
 
 ## how to use
 - replace the url in the array inside `Popen` with the one you want to download.
