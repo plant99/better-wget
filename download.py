@@ -2,50 +2,49 @@ from subprocess import Popen
 import time
 ...
 # Runs the command in another process. Doesn't block
-process = Popen(['wget',
+process = None
+def start_download(url, path_prefix):
+	global process
+	if process:
+		process.kill()
+		print('finished')
+	process = Popen(['wget',
 				'-c',
-				'http://podoce.dinf.usherbrooke.ca/static/dataset/MIO-TCD-Classification.tar',
+				url,
 				'-v',
+				'-P',
+				path_prefix,
 				'--output-file=output.txt'
 			])
 
-# wait a bit for first log to output.txt
+def download_url(url, path_prefix):
 
-time.sleep(2)
-while(True):
-	if process.poll() is None: 
-	    # Still running
-	    fo = open("./output.txt", "r+")
-	    lines_ = fo.read()
-	    lines = lines_.split('\n')
-	    lastLine = lines[len(lines)-2]
-	    splitLastLine = lastLine.split(' ')
+	# wait a bit for first log to output.txt
+	start_download(url, path_prefix)
 
-	    speed = splitLastLine[len(splitLastLine)-2]
-	    print(speed)
-	    if speed[-1] == 'B':
-	    	process.kill()
-	    	print('finished')
-	    	process = Popen(['wget',
-				'-c',
-				'http://podoce.dinf.usherbrooke.ca/static/dataset/MIO-TCD-Classification.tar',
-				'-v',
-				'--output-file=output.txt'
-			])
-	    elif speed[-1] == 'K':
-	    	if(float(speed.split('K')[0]) < 100):
-	    		process.kill()
-	    		print('finished')
-	    		process = Popen(['wget',
-					'-c',
-					'http://podoce.dinf.usherbrooke.ca/static/dataset/MIO-TCD-Classification.tar',
-					'-v',
-					'--output-file=output.txt'
-				])
-	    fo.close()
-	else:
-	    # Has finished
-	    print("finished")
-	time.sleep(1)
+	time.sleep(2)
+	while(True):
+		if process.poll() is None: 
+		    # Still running
+		    fo = open("./output.txt", "r+")
+		    lines_ = fo.read()
+		    lines = lines_.split('\n')
+		    lastLine = lines[len(lines)-2]
+		    splitLastLine = lastLine.split(' ')
+
+		    speed = splitLastLine[len(splitLastLine)-2]
+		    print(speed)
+		    if not speed:
+		    	continue
+		    if speed[-1] == 'B':
+		    	start_download(url, path_prefix)
+		    elif speed[-1] == 'K':
+		    	if(float(speed.split('K')[0]) < 100):
+		    		start_download(url, path_prefix)
+		    fo.close()
+		else:
+		    # Has finished
+		    print("finished")
+		time.sleep(1)
 
 
