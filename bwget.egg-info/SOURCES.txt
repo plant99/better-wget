@@ -1,0 +1,10 @@
+README.md
+setup.py
+better_wget/__init__.py
+better_wget/__main__.py
+better_wget/download.py
+bwget.egg-info/PKG-INFO
+bwget.egg-info/SOURCES.txt
+bwget.egg-info/dependency_links.txt
+bwget.egg-info/entry_points.txt
+bwget.egg-info/top_level.txt

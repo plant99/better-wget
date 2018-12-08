@@ -17,7 +17,7 @@ def start_download(url, path_prefix):
 				'--output-file=output.txt'
 			])
 
-def download_url(url, path_prefix):
+def download_url(url, path_prefix, min_speed):
 
 	# wait a bit for first log to output.txt
 	start_download(url, path_prefix)
@@ -39,7 +39,7 @@ def download_url(url, path_prefix):
 		    if speed[-1] == 'B':
 		    	start_download(url, path_prefix)
 		    elif speed[-1] == 'K':
-		    	if(float(speed.split('K')[0]) < 100):
+		    	if(float(speed.split('K')[0]) < min_speed):
 		    		start_download(url, path_prefix)
 		    fo.close()
 		else:

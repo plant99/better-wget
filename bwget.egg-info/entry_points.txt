@@ -1,0 +1,3 @@
+[console_scripts]
+bwget = better_wget.__main__:maingl
+
